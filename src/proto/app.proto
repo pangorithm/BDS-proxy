@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package app;
+
+service AppService {
+  rpc FindOne (AppById) returns (App);
+}
+
+message AppById {
+  int32 id = 1;
+}
+
+message App {
+  int32 id = 1;
+  string name = 2;
+}
