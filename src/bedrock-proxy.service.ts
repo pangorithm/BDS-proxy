@@ -15,17 +15,15 @@ export class BedrockProxyService implements OnModuleInit, OnModuleDestroy {
 
   startProxy() {
     this.relay = new Relay({
-      version: '1.21.80', // The version
+      // version: '1.21.80', // The version
       /* host and port to listen for clients on */
       host: '0.0.0.0',
       port: 29132,
+      offline: true,
       /* Where to send upstream packets to */
       destination: {
         host: '127.0.0.1',
         port: 19132
-      },
-      raknet: {
-        backend: 'raknet-js',
       },
     } as any)
     this.relay.listen() // Tell the server to start listening.
@@ -35,12 +33,14 @@ export class BedrockProxyService implements OnModuleInit, OnModuleDestroy {
 
       // Server is sending a message to the client.
       player.on('clientbound', ({ name, params }, des) => {
+        console.log('clientbound', { name, params })
         if (name === 'disconnect') { // Intercept kick
           params.message = 'Intercepted' // Change kick message to "Intercepted"
         }
       })
       // Client is sending a message to the server
       player.on('serverbound', ({ name, params }, des) => {
+        console.log('serverbound', { name, params })
         if (name === 'text') { // Intercept chat message to server and append time.
           params.message += `, on ${new Date().toLocaleString()}`
         }
