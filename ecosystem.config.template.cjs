@@ -14,6 +14,9 @@ module.exports = {
         '--destination_port',
         19132,
       ],
+      error_file: './logs/bds-proxy/error.log',
+      out_file: './logs/bds-proxy/out.log',
+      log_date_format: 'YYYY-MM-DD HH:mm:ss',
     },
     {
       name: 'bds-proxy-2',
@@ -29,6 +32,9 @@ module.exports = {
         '--destination_port',
         19132,
       ],
+      error_file: './logs/bds-proxy/error.log',
+      out_file: './logs/bds-proxy/out.log',
+      log_date_format: 'YYYY-MM-DD HH:mm:ss',
     },
   ],
 };
