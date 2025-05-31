@@ -2,6 +2,12 @@ import { Command } from 'commander';
 import { Relay } from 'bedrock-protocol';
 
 function initializeOptions() {
+  if (typeof globalThis.Bun !== 'undefined') {
+    console.log('▶ 런타임: Bun (process.execPath:', process.execPath, ')');
+  } else {
+    console.log('▶ 런타임: Node.js (process.execPath:', process.execPath, ')');
+  }
+
   const program = new Command();
   program
     .name('bedrock-proxy')
@@ -25,7 +31,7 @@ function initializeOptions() {
   return program.parse().opts();
 }
 
-async function main({ host, port, destination_host, destination_port }) {
+function main({ host, port, destination_host, destination_port }) {
   console.log('Starting proxy with config:', {
     host,
     port,
@@ -51,8 +57,12 @@ async function main({ host, port, destination_host, destination_port }) {
       },
     });
 
-    console.log('Attempting to bind relay...');
-    await relay.listen().catch((e) => {
+    console.log(
+      `Attempting to bind relay...
+      "Unknown bind__() error -1; port ${port}." 라고 나오지만 실제로는 binding 성공함
+      (racknet-native에서 ubuntu24용 prebuild를 제공하지 않아서 발생하는 에러)`,
+    );
+    relay.listen().catch((e) => {
       console.error('relay.listen() failed:', e);
     }); // Tell the server to start listening.
 
