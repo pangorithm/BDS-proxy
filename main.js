@@ -88,7 +88,4 @@ function main({ host, port, destination_host, destination_port }) {
   console.log(`proxy server started`);
 }
 
-const options = initializeOptions();
-console.log(`Options: ${JSON.stringify(options, null, 2)}`);
-
-main(options);
+main(initializeOptions());

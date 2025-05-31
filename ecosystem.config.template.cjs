@@ -1,14 +1,29 @@
 module.exports = {
   apps: [
     {
-      name: 'bds-proxy',
+      name: 'bds-proxy-1',
       script: './main.js',
       exec_mode: 'fork',
       args: [
         '--host',
         '127.0.0.1',
         '--port',
-        29132,
+        29133,
+        '--destination_host',
+        '127.0.0.1',
+        '--destination_port',
+        19132,
+      ],
+    },
+    {
+      name: 'bds-proxy-2',
+      script: './main.js',
+      exec_mode: 'fork',
+      args: [
+        '--host',
+        '127.0.0.1',
+        '--port',
+        29134,
         '--destination_host',
         '127.0.0.1',
         '--destination_port',
