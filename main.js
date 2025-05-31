@@ -25,7 +25,7 @@ function initializeOptions() {
   return program.parse().opts();
 }
 
-function main({ host, port, destination_host, destination_port }) {
+async function main({ host, port, destination_host, destination_port }) {
   console.log('Starting proxy with config:', {
     host,
     port,
@@ -50,7 +50,11 @@ function main({ host, port, destination_host, destination_port }) {
         port: parseInt(destination_port),
       },
     });
-    relay.listen(); // Tell the server to start listening.
+
+    console.log('Attempting to bind relay...');
+    await relay.listen().catch((e) => {
+      console.error('relay.listen() failed:', e);
+    }); // Tell the server to start listening.
 
     relay.on('connect', (player) => {
       try {
