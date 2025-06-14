@@ -22,7 +22,10 @@
   "homepage": "https://github.com/pangorithm/BDS-proxy#readme",
   "description": "",
   "dependencies": {
+    "@grpc/grpc-js": "^1.13.4",
+    "@grpc/proto-loader": "^0.7.15",
     "bedrock-protocol": "^3.45.0",
-    "commander": "^14.0.0"
+    "commander": "^14.0.0",
+    "dotenv": "^16.5.0"
   }
 }
