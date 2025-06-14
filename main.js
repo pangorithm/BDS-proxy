@@ -66,19 +66,49 @@ function main({ host, port, destination_host, destination_port }) {
       console.error('relay.listen() failed:', e);
     }); // Tell the server to start listening.
 
+    const clientboundSet = new Set();
+    const serverboundSet = new Set();
+
     relay.on('connect', (player) => {
       try {
         console.log('New connection', player.connection.address);
 
         // Server is sending a message to the client.
         player.on('clientbound', ({ name, params }, des) => {
+          switch (name) {
+            default:
+              if (!clientboundSet.has(name)) {
+                console.log(
+                  `Clientbound packet: ${name} (${
+                    params ? JSON.stringify(params) : 'no params'
+                  })`,
+                );
+                clientboundSet.add(name);
+              }
+              break;
+          }
+
           if (name === 'disconnect') {
             // Intercept kick
             params.message = 'Intercepted'; // Change kick message to "Intercepted"
           }
         });
+
         // Client is sending a message to the server
         player.on('serverbound', ({ name, params }, des) => {
+          switch (name) {
+            default:
+              if (!serverboundSet.has(name)) {
+                console.log(
+                  `Serverbound packet: ${name} (${
+                    params ? JSON.stringify(params) : 'no params'
+                  })`,
+                );
+                serverboundSet.add(name);
+              }
+              break;
+          }
+
           if (name === 'text') {
             // Intercept chat message to server and append time.
             params.message += `, on ${new Date().toLocaleString()}`;
