@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import { Relay } from 'bedrock-protocol';
+import { jsonStringify } from './common.js';
 
 function initializeOptions() {
   if (typeof globalThis.Bun !== 'undefined') {
@@ -75,50 +76,58 @@ function main({ host, port, destination_host, destination_port }) {
 
         // Server is sending a message to the client.
         player.on('clientbound', ({ name, params }, des) => {
-          switch (name) {
-            default:
-              if (!clientboundSet.has(name)) {
-                console.log(
-                  `Clientbound packet: ${name} (${
-                    params ? JSON.stringify(params) : 'no params'
-                  })`,
-                );
-                clientboundSet.add(name);
-              }
-              break;
-          }
+          try {
+            switch (name) {
+              default:
+                if (!clientboundSet.has(name)) {
+                  console.log(
+                    `Clientbound packet: ${name} (${
+                      des ? jsonStringify(des) : 'no des obj'
+                    })`,
+                  );
+                  clientboundSet.add(name);
+                }
+                break;
+            }
 
-          if (name === 'disconnect') {
-            // Intercept kick
-            params.message = 'Intercepted'; // Change kick message to "Intercepted"
+            if (name === 'disconnect') {
+              // Intercept kick
+              params.message = 'Intercepted'; // Change kick message to "Intercepted"
+            }
+          } catch (error) {
+            console.error('Error processing clientbound packet:', error);
           }
         });
 
         // Client is sending a message to the server
         player.on('serverbound', ({ name, params }, des) => {
-          switch (name) {
-            default:
-              if (!serverboundSet.has(name)) {
-                console.log(
-                  `Serverbound packet: ${name} (${
-                    params ? JSON.stringify(params) : 'no params'
-                  })`,
-                );
-                serverboundSet.add(name);
-              }
-              break;
-          }
-
-          if (name === 'text') {
-            // Intercept chat message to server and append time.
-            params.message += `, on ${new Date().toLocaleString()}`;
-          }
-
-          if (name === 'command_request') {
-            // Intercept command request to server and cancel if its "/test"
-            if (params.command == '/test') {
-              des.canceled = true;
+          try {
+            switch (name) {
+              default:
+                if (!serverboundSet.has(name)) {
+                  console.log(
+                    `Serverbound packet: ${name} (${
+                      des ? jsonStringify(des) : 'no des obj'
+                    })`,
+                  );
+                  serverboundSet.add(name);
+                }
+                break;
             }
+
+            if (name === 'text') {
+              // Intercept chat message to server and append time.
+              params.message += `, on ${new Date().toLocaleString()}`;
+            }
+
+            if (name === 'command_request') {
+              // Intercept command request to server and cancel if its "/test"
+              if (params.command == '/test') {
+                des.canceled = true;
+              }
+            }
+          } catch (error) {
+            console.error('Error processing serverbound packet:', error);
           }
         });
       } catch (error) {
