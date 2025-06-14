@@ -1,0 +1,8 @@
+version: v1
+plugins:
+  - name: js
+    path: ./node_modules/.bin/protoc-gen-js
+    out: src/buf/js
+    opt:
+      - import_style=es6
+      - binary

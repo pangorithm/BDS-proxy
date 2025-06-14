@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: 'bds-proxy-1',
-      script: './main.js',
+      script: './src/main.js',
       exec_mode: 'fork',
       args: [
         '--host',
@@ -20,7 +20,7 @@ module.exports = {
     },
     {
       name: 'bds-proxy-2',
-      script: './main.js',
+      script: './src/main.js',
       exec_mode: 'fork',
       args: [
         '--host',

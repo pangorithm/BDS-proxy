@@ -147,3 +147,5 @@ dist
 ecosystem.config.js
 ecosystem.config.cjs
 ecosystem.config.mjs
+
+buf/
