@@ -51,11 +51,11 @@ function main({ host, port, destination_host, destination_port }) {
             switch (name) {
               default:
                 if (!clientboundSet.has(name)) {
-                  // console.log(
-                  //   `Clientbound packet: ${name} (${
-                  //     des ? jsonStringify(des) : 'no des obj'
-                  //   })`,
-                  // );
+                  console.log(
+                    `Clientbound packet: ${name} (${
+                      des ? jsonStringify(des.data) : 'no des.data obj'
+                    })`,
+                  );
                   clientboundSet.add(name);
                   await put({
                     sender: 'clientbound',
@@ -81,11 +81,11 @@ function main({ host, port, destination_host, destination_port }) {
             switch (name) {
               default:
                 if (!serverboundSet.has(name)) {
-                  // console.log(
-                  //   `Serverbound packet: ${name} (${
-                  //     des ? jsonStringify(des) : 'no des obj'
-                  //   })`,
-                  // );
+                  console.log(
+                    `Serverbound packet: ${name} (${
+                      des ? jsonStringify(des.data) : 'no des.data obj'
+                    })`,
+                  );
                   serverboundSet.add(name);
                   await put({
                     sender: 'serverbound',
