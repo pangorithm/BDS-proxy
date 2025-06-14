@@ -58,9 +58,9 @@ function main({ host, port, destination_host, destination_port }) {
                   // );
                   clientboundSet.add(name);
                   await put({
-                    sender: 'server',
+                    sender: 'clientbound',
                     event: name,
-                    des_json: jsonStringify(des),
+                    des_json: jsonStringify(des.data),
                   });
                 }
                 break;
@@ -88,9 +88,9 @@ function main({ host, port, destination_host, destination_port }) {
                   // );
                   serverboundSet.add(name);
                   await put({
-                    sender: 'client',
+                    sender: 'serverbound',
                     event: name,
-                    des_json: jsonStringify(des),
+                    des_json: jsonStringify(des.data),
                   });
                 }
                 break;
