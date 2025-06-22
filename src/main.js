@@ -43,7 +43,8 @@ function main({ host, port, destination_host, destination_port }) {
 
     relay.on('connect', (player) => {
       try {
-        console.log('New connection', player.connection.address);
+        console.log('New connection', player.connection.guid);
+        // console.log('player info:', jsonStringify(player));
 
         // Server is sending a message to the client.
         player.on('clientbound', async ({ name, params }, des) => {
@@ -51,11 +52,11 @@ function main({ host, port, destination_host, destination_port }) {
             switch (name) {
               default:
                 if (!clientboundSet.has(name)) {
-                  console.log(
-                    `Clientbound packet: ${name} (${
-                      des ? jsonStringify(des.data) : 'no des.data obj'
-                    })`,
-                  );
+                  // console.log(
+                  //   `Clientbound packet: ${name} (${
+                  //     des ? jsonStringify(des.data) : 'no des.data obj'
+                  //   })`,
+                  // );
                   clientboundSet.add(name);
                   await put({
                     direction: 'clientbound',
@@ -71,7 +72,21 @@ function main({ host, port, destination_host, destination_port }) {
               params.message = 'Intercepted'; // Change kick message to "Intercepted"
             }
           } catch (error) {
-            console.error('Error processing clientbound packet:', error);
+            // console.error('Error processing clientbound packet:', error);
+            try {
+              const tmp = {
+                name: name,
+                param_keys: Object.keys(params),
+                proxy_error: error.message,
+              };
+              await put({
+                direction: 'clientbound',
+                event: name,
+                des_json: jsonStringify(tmp),
+              });
+            } catch (error) {
+              console.error('Error processing clientbound packet:', error);
+            }
           }
         });
 
@@ -81,11 +96,11 @@ function main({ host, port, destination_host, destination_port }) {
             switch (name) {
               default:
                 if (!serverboundSet.has(name)) {
-                  console.log(
-                    `Serverbound packet: ${name} (${
-                      des ? jsonStringify(des.data) : 'no des.data obj'
-                    })`,
-                  );
+                  // console.log(
+                  //   `Serverbound packet: ${name} (${
+                  //     des ? jsonStringify(des.data) : 'no des.data obj'
+                  //   })`,
+                  // );
                   serverboundSet.add(name);
                   await put({
                     direction: 'serverbound',
@@ -108,7 +123,21 @@ function main({ host, port, destination_host, destination_port }) {
               }
             }
           } catch (error) {
-            console.error('Error processing serverbound packet:', error);
+            // console.error('Error processing serverbound packet:', error);
+            try {
+              const tmp = {
+                name: name,
+                param_keys: Object.keys(params),
+                proxy_error: error.message,
+              };
+              await put({
+                direction: 'serverbound',
+                event: name,
+                des_json: jsonStringify(tmp),
+              });
+            } catch (error) {
+              console.error('Error processing serverbound packet:', error);
+            }
           }
         });
       } catch (error) {
